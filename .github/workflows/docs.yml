@@ -40,7 +40,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ./docs/
+      url: .
     steps:
       - id: deployment
         uses: actions/deploy-pages@v2

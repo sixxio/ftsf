@@ -1,10 +1,37 @@
-
 import pandas as pd, re, json, requests as rq, numpy as np, datetime
+
 from .scaler import Scaler
+
 from pathlib import Path
 PACKAGEDIR = Path(__file__).parent.absolute()
 
+
 def get_data(ticker = 'AAPL', column = 'close', length = 15, step = 1, start_date = '01-01-2013', split_date = '01-01-2022', end_date = '01-01-2023', flatten = False, validate = False):
+    '''
+    Prepares data for training and evaluating.
+
+    Args:
+    ticker (str): Ticker to get data for.
+    column (str): Column from HLOCV to work with.
+    length (int): Length of arrays, length-1 values are for fitting, 1 value is for evaluating.
+    step (int): Step to cut data using sliding window.
+    start_date (str): Date to start cutting data from.
+    split_date (str): Date to split into train/test.
+    end_date (str): Date to end cutting data.
+    flatten (bool): Shape format:  (cuts, length-1) or (cuts, length-1, 1).
+    validate (bool): To make validation split or not.
+    
+    Returns:
+        x_train, x_test, y_train, y_test, scaler: train and test data with scaler to work with.
+
+    Example:
+    >>> get_data('AAPL', 'close', 10)
+    [[0.122, 0.12, 0.125, ..], ..]
+    [0.12, ..]
+    [[0.132, 0.13, 0.135, ..], ..]
+    [0.13, ..]
+    Scaler()
+    '''
     data = pd.read_parquet(f'{PACKAGEDIR}/data.parquet.gz')
     data = data[(data.dateTime >= start_date) & (data.ticker == ticker)]
 
@@ -34,7 +61,17 @@ def get_data(ticker = 'AAPL', column = 'close', length = 15, step = 1, start_dat
     else:
         return scaled_x_train, scaled_x_test, scaled_y_train, scaled_y_test, scaler
 
-def update_data(tickers = []):    
+def update_data(tickers = []):
+    '''
+    Updates stored data for defined tickers.
+
+    Args:
+    tickers (list): Tickers list to update data for.
+
+    Example:
+    >>> get_data(['AMZN', 'TSLA', 'NVDA']])
+    Info about 3 tickers successfully uploaded.
+    '''
     all_tickers_df = pd.read_parquet(f'{PACKAGEDIR}/data.parquet.gz')
     for i in tickers:
         headers = {"Accept":"text/html", "Accept-Language":"en-US", "Referer":"https://www.nasdaq.com/", "User-Agent":"Chrome/64.0.3282.119"} 

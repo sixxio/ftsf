@@ -1,15 +1,15 @@
 from tensorflow.keras import Sequential, models
 from tensorflow.keras.layers import LSTM, Dense, GRU, SimpleRNN, Conv1D, Flatten
 
-'''
-some
-'''
-"""
-some
-"""
-
-
 def get_topologies(lag = 30):
+    '''
+    Returns dict of neural network topologies adapted to defined lag. 
+
+    Args:
+        lag (int): 
+
+    
+    '''
     neurons_per_layer = lag-1
     input_shape = (neurons_per_layer, 1)
     return {  'CNN + LSTM': [Conv1D(filters = 128, kernel_size = 3, activation = 'relu', input_shape = input_shape),

@@ -1,4 +1,4 @@
-from .evaluation import get_topologies
+from .utils import get_topologies
 
 # ML methods
 from sklearn.linear_model import LinearRegression
@@ -23,31 +23,31 @@ class Model:
     Represents generic model with unified interface.
 
     Backends: 
-    -------------------
-    ML: CatBoost, XGBoost, Sklearn;
 
-    AR: Statsmodels;
+        ML: CatBoost, XGBoost, Sklearn;
 
-    NN:TensorFlow.Keras.
+        AR: Statsmodels;
+
+        NN:TensorFlow.Keras.
 
     Models:
-    -----------------
-    ML: LinearRegression, DecisionTreeRegressor, RandomForestRegressor, GradientBoostingRegressor, SVR, CatBoostRegressor, XGBoostRegressor, XGBoostRandomForestRegressor;
 
-    AR: ARMA, ARIMA;
+        ML: LinearRegression, DecisionTreeRegressor, RandomForestRegressor, GradientBoostingRegressor, SVR, CatBoostRegressor, XGBoostRegressor, XGBoostRandomForestRegressor;
 
-    NN: CNN + SimpleRNN/LSTM/GRU, LSTM x1-3, GRU x1-3, SimpleRNN x1-3, CNN, MLP(1-3).
+        AR: ARMA, ARIMA;
+
+        NN: CNN + SimpleRNN/LSTM/GRU, LSTM x1-3, GRU x1-3, SimpleRNN x1-3, CNN, MLP(1-3).
 
 
     Methods:
-    ------------------
-    fit(x_train, y_train) - fits model using x_train and y_train data;
 
-    predict(x_train, y_train, x_test, x_test) - forecasts values using x_test;
+        fit(x_train, y_train) - fits model using x_train and y_train data;
 
-    evaluate(x_test, x_test) - forecasts values using x_test, then measures MSE, MAE, MAPE and R2;
+        predict(x_train, y_train, x_test, x_test) - forecasts values using x_test;
 
-    summary() - shows short summary about model, its type and backend.
+        evaluate(x_test, x_test) - forecasts values using x_test, then measures MSE, MAE, MAPE and R2;
+
+        summary() - shows short summary about model, its type and backend.
 
     '''
 
@@ -123,12 +123,14 @@ class Model:
         elif self.__backend != 'statsmodels':
             x_train = x_train.reshape((x_train.shape[0], x_train.shape[1]))
             self.__model.fit(x_train, y_train)
+        
+        return self
 
     def predict(self, x_test, scaler):
         '''
         Predicts and scales values using x_test and scaler.
         
-        Parameters:
+        Args:
 
         x_test - previous price values;
 

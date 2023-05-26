@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: ftsf
+Version: 0.0.1.2
+Summary: Package for financial time series forecasting.
+Author-email: Nikita Safonov <sixxio@yandex.ru>
+Project-URL: Homepage, https://github.com/sixxio/ftsf
+Project-URL: Documentation, https://sixxio.github.io/ftsf/
+Project-URL: Bug Tracker, https://github.com/sixxio/ftsf/issues
+Classifier: Development Status :: 3 - Alpha
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# Initial

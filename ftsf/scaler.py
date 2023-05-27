@@ -2,57 +2,58 @@ import numpy as np
 
 class Scaler:
     '''
-    Represents default minmax scaler adapted for price scaling.
-    
-    Methods:
-    
-    fit(array) - defines minimum and maximum values for scaling;
-    
-    scale(array) - scales array by defined minimum and maximum values;
-    
-    fit_scale(fit_array, scale_array) - defines minimum and maximum from fit_array, then scales fit_array and scale_array using defined parameters;
-    
-    unscale(array) - scales array back to source range;
-    
-    params() - returns minimum and maximum parameters of scaling.
+    Instance of default minmax scaler adapted for price scaling.
+
+
     '''
     
-    minimum, maximum = 0, 0
+    __minimum = 0
+    __maximum = 0
     
     def __init__(self, params = None):
-        if params != None:
-            self.minimum, self.maximum = params[0], params[1]
+        '''
+        Initializes instance of scaler.
 
-    def fit(self, array_to_fit) -> any:
+        Args:
+
+            params: List of min and max values.
+
+        Example:
+        >>> Scaler([0.2, 2.3])
+        '''
+        if params != None:
+            self.__minimum, self.__maximum = params[0], params[1]
+
+    def fit(self, array_to_fit):
         '''
         Fits scaler on input array.
         '''
-        self.minimum = np.min(array_to_fit)
-        self.maximum = np.max(array_to_fit)
+        self.__minimum = np.min(array_to_fit)
+        self.__maximum = np.max(array_to_fit)
         return self
     
     def scale(self, array) -> np.array:
         '''
         Returns array scaled on data fed during fit.
         '''
-        return (array-self.minimum)/(self.maximum - self.minimum)
+        return (array-self.__minimum)/(self.__maximum - self.__minimum)
     
     def fit_scale(self, fit_array, scale_array) -> list:
         '''
         Returns two arrays, scaled on first array range.
         '''
-        self.minimum = np.min(fit_array)
-        self.maximum = np.max(fit_array)
-        return (fit_array-self.minimum)/(self.maximum - self.minimum), (scale_array-self.minimum)/(self.maximum - self.minimum)
+        self.__minimum = np.min(fit_array)
+        self.__maximum = np.max(fit_array)
+        return (fit_array-self.__minimum)/(self.__maximum - self.__minimum), (scale_array-self.__minimum)/(self.__maximum - self.__minimum)
     
     def unscale(self, array) -> np.array:
         '''
         Returns array, unscaled to source range.
         '''
-        return array*(self.maximum - self.minimum) + self.minimum
+        return array*(self.__maximum - self.__minimum) + self.__minimum
     
     def params(self) -> list:
         '''
         Returns min and max values, used to scale.
         '''
-        return self.minimum, self.maximum
+        return self.__minimum, self.__maximum

@@ -1,35 +1,43 @@
 import pandas as pd, time
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score,  mean_absolute_percentage_error
 import plotly.express as px
-from .model import Model
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score,  mean_absolute_percentage_error
 
 import warnings
 warnings.filterwarnings("ignore")
 
+from .model import Model
+from .utils import get_models
 
 def evaluate_ml_models(x_train, x_test, y_train, y_test, scaler, out_type = 'list'):
     '''
     Evaluates machine learning models on data.
 
     Args:
-        x_train (np.array): Input values to fit model.
-        x_test (np.array): Input values to evaluate model.
-        y_train (np.array): Target values to fit model.
-        y_test (np.array): Target values to fit model.
-        scaler (Scaler): Scaler to scale/unscale values during evaluation.
-        out_type (str): Format to return data. 
+
+        x_train: Input values to fit model.
+        
+        x_test: Input values to evaluate model.
+        
+        y_train: Target values to fit model.
+        
+        y_test: Target values to fit model.
+        
+        scaler: Scaler to scale/unscale values during evaluation.
+        
+        out_type: Format to return data. 
     
     Returns:
+        
         list: List of dictionaries with time, MSE, MAE, MAPE, R2 values and model name for each model.
-        or
-        pd.DataFrame : dataframe with the same data.
+        
+        or pd.DataFrame: dataframe with the same data.
 
     Example:
     >>> evaluate_ml_models(x_train, x_test, y_train, y_test, scaler)
     [{'time' : 0.12, 'mse' : 0.04, 'mae' : 0.2, 'mape' : 0.01, 'model' : 'LR'}, ...]
     '''
     statistics = []
-    for i in ['LR', 'DTR', 'RFR', 'GBR', 'SVR', 'CBR', 'XGBR', 'XGBRFR']:
+    for i in get_models('ml'):
         current_model = Model(i)
         start_time = time.time()
         current_model.fit(x_train, y_train)
@@ -53,28 +61,35 @@ def evaluate_ar_models(x_train, x_test, y_train, y_test, scaler, out_type = 'lis
     Evaluates autoregressive models on data.
 
     Args:
-        x_train (np.array): Input values to fit model.
-        x_test (np.array): Input values to evaluate model.
-        y_train (np.array): Target values to fit model.
-        y_test (np.array): Target values to fit model.
-        scaler (Scaler): Scaler to scale/unscale values during evaluation.
-        out_type (str): Format to return data. 
+
+        x_train: Input values to fit model.
+
+        x_test: Input values to evaluate model.
+
+        y_train: Target values to fit model.
+
+        y_test: Target values to fit model.
+
+        scaler: Scaler to scale/unscale values during evaluation.
+
+        out_type: Format to return data. 
     
     Returns:
+
         list: List of dictionaries with time, MSE, MAE, MAPE, R2 values and model name for each model.
-        or
-        pd.DataFrame : dataframe with the same data.
+
+        or pd.DataFrame : dataframe with the same data.
 
     Example:
     >>> evaluate_ar_models(x_train, x_test, y_train, y_test, scaler)
     [{'time' : 0.12, 'mse' : 0.04, 'mae' : 0.2, 'mape' : 0.01, 'model' : 'ARMA(2,1)'}, ...]
     '''
     statistics = []
-    for i in ['ARMA(2,1)', 'ARIMA(2,1,1)']:
+    for i in get_models('ar'):
         pred = []
         for j in range(len(y_test)):
             start_time = time.time()
-            current_model = Model(i, data=x_test[j])            
+            current_model = Model(i).fit(x_test[j], y_test[j])     
             utilized = time.time() - start_time
             pred.append(current_model.predict(x_test[j], scaler))
         true = scaler.unscale(y_test)
@@ -95,21 +110,32 @@ def evaluate_nn_models(x_train, x_test, y_train, y_test, scaler, optimizer = 'na
     Evaluates neural network based models on data.
 
     Args:
-        x_train (np.array): Input values to fit model.
-        x_test (np.array): Input values to evaluate model.
-        y_train (np.array): Target values to fit model.
-        y_test (np.array): Target values to fit model.
-        scaler (Scaler): Scaler to scale/unscale values during evaluation.
-        optimizer (str): tf.Keras optimizer name (optional: only for neural networks).
-        loss (str): tf.Keras loss name (optional: only for neural networks).
-        epochs (int): Number of epochs during fitting (optional: only for neural networks).
-        batch_size (int): Size of batch during fitting (optional: only for neural networks).
-        out_type (str): Format to return data. 
+
+        x_train: Input values to fit model.
+    
+        x_test: Input values to evaluate model.
+        
+        y_train: Target values to fit model.
+        
+        y_test: Target values to fit model.
+        
+        scaler: Scaler to scale/unscale values during evaluation.
+        
+        optimizer: tf.Keras optimizer name (optional: only for neural networks).
+        
+        loss: tf.Keras loss name (optional: only for neural networks).
+        
+        epochs: Number of epochs during fitting (optional: only for neural networks).
+        
+        batch_size: Size of batch during fitting (optional: only for neural networks).
+        
+        out_type: Format to return data. 
     
     Returns:
+        
         list: List of dictionaries with time, MSE, MAE, MAPE, R2 values and model name for each model.
-        or
-        pd.DataFrame : dataframe with the same data.
+        
+        or pd.DataFrame: dataframe with the same data.
 
     Example:
     >>> evaluate_nn_models(x_train, x_test, y_train, y_test, scaler)
@@ -117,8 +143,7 @@ def evaluate_nn_models(x_train, x_test, y_train, y_test, scaler, optimizer = 'na
     '''
 
     statistics = []
-    for i in ['CNN + LSTM', 'LSTM x3', 'LSTM x2', 'LSTM x1', 'CNN + GRU', 'GRU x3', 'GRU x2', 'GRU x1', \
-              'CNN + SimpleRNN', 'SimpleRNN x3', 'SimpleRNN x2', 'SimpleRNN x1', 'CNN', 'MLP(3)', 'MLP(2)','MLP(1)']:
+    for i in get_models('nn'):
         current_model = Model(i, lag = x_train.shape[1]+1, optimizer=optimizer, loss=loss)
         start_time = time.time()
         current_model.fit(x_train, y_train, epochs, batch_size)
@@ -143,21 +168,32 @@ def evaluate_all_models(x_train, x_test, y_train, y_test, scaler, optimizer = 'n
     Evaluates all models on data.
 
     Args:
-        x_train (np.array): Input values to fit model.
-        x_test (np.array): Input values to evaluate model.
-        y_train (np.array): Target values to fit model.
-        y_test (np.array): Target values to fit model.
-        scaler (Scaler): Scaler to scale/unscale values during evaluation.
-        optimizer (str): tf.Keras optimizer name (optional: only for neural networks).
-        loss (str): tf.Keras loss name (optional: only for neural networks).
-        epochs (int): Number of epochs during fitting (optional: only for neural networks).
-        batch_size (int): Size of batch during fitting (optional: only for neural networks).
-        out_type (str): Format to return data. 
+
+        x_train: Input values to fit model.  
+
+        x_test: Input values to evaluate model.  
+
+        y_train: Target values to fit model.
+
+        y_test: Target values to fit model.
+
+        scaler: Scaler to scale/unscale values during evaluation.
+
+        optimizer: tf.Keras optimizer name (optional: only for neural networks).
+
+        loss: tf.Keras loss name (optional: only for neural networks).
+
+        epochs: Number of epochs during fitting (optional: only for neural networks).
+
+        batch_size: Size of batch during fitting (optional: only for neural networks).
+
+        out_type: Format to return data. 
     
     Returns:
+
         list: List of dictionaries with time, MSE, MAE, MAPE, R2 values and model name for each model.
-        or
-        pd.DataFrame : dataframe with the same data.
+
+        or pd.DataFrame: dataframe with the same data.
 
     Example:
     >>> evaluate_all_models(x_train, x_test, y_train, y_test, scaler)
@@ -172,9 +208,3 @@ def evaluate_all_models(x_train, x_test, y_train, y_test, scaler, optimizer = 'n
         return pd.DataFrame(statistics).sort_values(by='mape')
     elif out_type == 'list':
         return statistics
-    
-def plot_histogran(results):
-    '''
-    Plots histogram for resulting error values.
-    '''
-    px.histogram(results, x='model', y='mape')

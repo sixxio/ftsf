@@ -4,10 +4,17 @@ import numpy as np
 
 class BackTesting:
     '''
-    Implements strategy and backtests it.
+    Models trading strategy and backtests it.
 
-    Methods:
-    test(states, depth, steps_forward) - tests strategy and prints result.
+    Attributes:
+        
+        initial_money: Initial amount of money to work with.
+        
+        money: Current amount of money.
+        
+        stocks: Current amount of stocks.
+
+        model: Instance of model used for forecasting.
     '''
     __initial_money = 0
     __money = 0

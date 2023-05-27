@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ftsf"
-version = "0.0.1.2"
+version = "0.0.1.4"
 authors = [{ name="Nikita Safonov", email="sixxio@yandex.ru" }]
 description = "Package for financial time series forecasting."
 readme = "README.md"

@@ -9,9 +9,7 @@ FTSF.egg-info/top_level.txt
 ftsf/__init__.py
 ftsf/backtest.py
 ftsf/evaluation.py
-ftsf/ftsf.py
 ftsf/model.py
-ftsf/pipeline.py
 ftsf/preprocessing.py
 ftsf/scaler.py
 ftsf/utils.py

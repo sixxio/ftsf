@@ -53,7 +53,7 @@ def get_data(ticker = 'AAPL', column = 'close', length = 15, step = 1, start_dat
         scaled_x_test = np.reshape(scaled_x_test, (scaled_x_test.shape[0], length - 1,1))
 
     if validate:
-        val_data = data[(data.dateTime >= end_date) & (data.ticker == ticker)]['price'].values.reshape(-1, 1)
+        val_data = data[(data.dateTime >= end_date) & (data.ticker == ticker)][column].values.reshape(-1, 1)
         val_set = [val_data[j:j+length,0] for j in range(0, len(val_data)-length, step)]
         scaled_val_set = scaler.scale(val_set)
         scaled_x_val, scaled_y_val = scaled_val_set[:,:length-1], scaled_val_set[:,length-1]

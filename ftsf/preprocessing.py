@@ -11,15 +11,24 @@ def get_data(ticker = 'AAPL', column = 'close', length = 15, step = 1, start_dat
     Prepares data for training and evaluating.
 
     Args:
-    ticker (str): Ticker to get data for.
-    column (str): Column from HLOCV to work with.
-    length (int): Length of arrays, length-1 values are for fitting, 1 value is for evaluating.
-    step (int): Step to cut data using sliding window.
-    start_date (str): Date to start cutting data from.
-    split_date (str): Date to split into train/test.
-    end_date (str): Date to end cutting data.
-    flatten (bool): Shape format:  (cuts, length-1) or (cuts, length-1, 1).
-    validate (bool): To make validation split or not.
+
+        ticker: Ticker to get data for.
+
+        column: Column from HLOCV to work with.
+
+        length: Length of arrays, length-1 values are for fitting, 1 value is for evaluating.
+
+        step: Step to cut data using sliding window.
+
+        start_date: Date to start cutting data from.
+
+        split_date: Date to split into train/test.
+
+        end_date: Date to end cutting data.
+
+        flatten: Shape format:  (cuts, length-1) or (cuts, length-1, 1).
+
+        validate: To make validation split or not.
     
     Returns:
         x_train, x_test, y_train, y_test, scaler: train and test data with scaler to work with.
@@ -66,7 +75,8 @@ def update_data(tickers = []):
     Updates stored data for defined tickers.
 
     Args:
-    tickers (list): Tickers list to update data for.
+
+        tickers (list): Tickers list to update data for.
 
     Example:
     >>> get_data(['AMZN', 'TSLA', 'NVDA']])

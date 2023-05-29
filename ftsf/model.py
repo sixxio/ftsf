@@ -1,22 +1,23 @@
-# ML methods
-from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.svm import SVR
-from catboost import CatBoostRegressor
-from xgboost import XGBRegressor, XGBRFRegressor
+'''This submodule contains generic model class.'''
 
+# ML methods
+import numpy as np
+from catboost import CatBoostRegressor
+from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+# Metrics
+from sklearn.metrics import (mean_absolute_error,
+                             mean_absolute_percentage_error,
+                             mean_squared_error, r2_score)
+from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeRegressor
 # Autoregressive methods
 from statsmodels.tsa.arima.model import ARIMA
-
 # NN methods
 from tensorflow.keras import Sequential
+from xgboost import XGBRegressor, XGBRFRegressor
 
-# Metrics
-from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_absolute_percentage_error, r2_score
-import numpy as np
-
-from .utils import get_topologies
+from .utils import (get_topologies, parse_name)
 
 class Model:
     '''
@@ -50,7 +51,7 @@ class Model:
     def __init__(self, name, lag = 15, optimizer = 'nadam', loss = 'mse'):
         '''
         Initializes the instance of model based on defined type.
-        
+
         Args:
 
             name: Defines exact model.
@@ -62,15 +63,15 @@ class Model:
             optimizer: Optimizer to use on compiling neural network based models.
 
             loss: Loss function to use on compiling neural network based models.
-        
+
         Example:
         >>> Model('LSTM x2', 15)
         '''
         models = {'ml': ['LR', 'DTR', 'RFR', 'GBR', 'SVR', 'CBR', 'XGBR', 'XGBRFR'],
-                  'ar': ['ARMA(2,1)', 'ARIMA(2,1,1)'], 
+                  'ar': ['ARMA(2,1)', 'ARIMA(2,1,1)'],
                   'nn': ['CNN + LSTM', 'LSTM x3', 'LSTM x2', 'LSTM x1', 'CNN + GRU', 'GRU x3', 'GRU x2', 'GRU x1', \
                          'CNN + SimpleRNN', 'SimpleRNN x3', 'SimpleRNN x2', 'SimpleRNN x1', 'CNN', 'MLP(3)', 'MLP(2)', 'MLP(1)']}
-        
+
         self.__type = [key for key, value in models.items() if name in value][0]
         self.__name = name
 
@@ -81,7 +82,7 @@ class Model:
                 self.__backend = 'XGBoost'
             else:
                 self.__backend = 'Scikit-learn'
-    
+
             self.__model = {  'LR' :  LinearRegression(),
                             'DTR' : DecisionTreeRegressor(min_samples_leaf=5),
                             'RFR' : RandomForestRegressor(),
@@ -90,10 +91,10 @@ class Model:
                             'CBR' : CatBoostRegressor(loss_function='MAPE'),
                             'XGBR': XGBRegressor(objective='reg:squarederror'),
                             'XGBRFR': XGBRFRegressor(objective = 'reg:squarederror')}[name]
-        
+
         elif self.__type == 'ar':
             self.__backend = 'Statsmodels'
-        
+
         elif self.__type == 'nn':
             self.__backend = 'TensorFlow.Keras'
             self.__model = Sequential(get_topologies(lag)[name])
@@ -104,7 +105,7 @@ class Model:
         Fits model using x_train and y_train.
 
         Note that autoregressive models differ from other and can be fitted only on one sample of data.
-        
+
         Args:
 
             x_train: Array with previous price values.
@@ -129,22 +130,14 @@ class Model:
             x_train = x_train.reshape((x_train.shape[0], x_train.shape[1]))
             self.__model.fit(x_train, y_train)
         elif self.__backend == 'Statsmodels':
-            if self.__name.find('I') != -1:
-                p = float(self.__name[self.__name.find('(') + 1 : self.__name.find(',')])
-                d = float(self.__name[self.__name.find(',') + 1 : self.__name.find(',', self.__name.find(',') + 1)])
-                q = float(self.__name[self.__name.find(',', self.__name.find(',') + 1) + 1 : self.__name.find(')')])
-            else:
-                p = float(self.__name[self.__name.find('(') + 1 : self.__name.find(',')])
-                d = 0
-                q = float(self.__name[self.__name.find(',') + 1 : self.__name.find(')')])
-            self.__model = ARIMA(x_train, order = (p, d, q), enforce_stationarity = False)
-        
+            self.__model = ARIMA(x_train, order = parse_name(self.__name), enforce_stationarity = False)
+
         return self
 
     def predict(self, x_test, scaler):
         '''
         Predicts and scales values using x_test and scaler.
-        
+
         Args:
 
             x_test - previous price values;
@@ -173,7 +166,7 @@ class Model:
     def evaluate(self, x_test, y_test, scaler):
         '''
         Predicts and scales values using x_test and scaler, then measures MSE, MAE, MAPE and R2.
-        
+
         Args:
 
             x_test: Array with previous price values.
@@ -204,10 +197,10 @@ class Model:
 
         Returns:
             String with short model description.
-        
+
         Example:
         >>> model.summary()
         ML model XGBRegressor, backend is based on XGBoost.
         '''
-        
+
         print(f'{self.__type.upper()} model {self.__name}, backend is based on {self.__backend}.')

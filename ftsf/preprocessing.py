@@ -1,10 +1,17 @@
-import pandas as pd, re, json, requests as rq, numpy as np, datetime
+'''This submodule contains functions to preprocess and update data.'''
+
+import datetime
+import json
+import re
+
+import numpy as np
+import pandas as pd
+import requests as rq
 
 from .scaler import Scaler
-
 from pathlib import Path
-PACKAGEDIR = Path(__file__).parent.absolute()
 
+PACKAGEDIR = Path(__file__).parent.absolute()
 
 def get_data(ticker = 'AAPL', column = 'close', length = 15, step = 1, start_date = '01-01-2013', split_date = '01-01-2022', end_date = '01-01-2023', flatten = False, validate = False):
     '''
@@ -29,7 +36,7 @@ def get_data(ticker = 'AAPL', column = 'close', length = 15, step = 1, start_dat
         flatten: Shape format:  (cuts, length-1) or (cuts, length-1, 1).
 
         validate: To make validation split or not.
-    
+
     Returns:
         x_train, x_test, y_train, y_test, scaler: train and test data with scaler to work with.
 
@@ -84,7 +91,7 @@ def update_data(tickers = []):
     '''
     all_tickers_df = pd.read_parquet(f'{PACKAGEDIR}/data.parquet.gz')
     for i in tickers:
-        headers = {"Accept":"text/html", "Accept-Language":"en-US", "Referer":"https://www.nasdaq.com/", "User-Agent":"Chrome/64.0.3282.119"} 
+        headers = {"Accept":"text/html", "Accept-Language":"en-US", "Referer":"https://www.nasdaq.com/", "User-Agent":"Chrome/64.0.3282.119"}
         resp = rq.get(f'https://api.nasdaq.com/api/quote/{i}/chart?assetclass=stocks&fromdate=2023-04-29&todate={datetime.datetime.now().strftime("%Y-%m-%d")}', headers=headers, verify=True)
         if resp.status_code == 200:
             try:

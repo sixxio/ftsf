@@ -1,17 +1,20 @@
-from .scaler import Scaler
-from .model import Model
+'''This submodule contains instrument to test trading strategy based on model on historical data.'''
+
 import numpy as np
+
+from .model import Model
+from .scaler import Scaler
 
 class BackTesting:
     '''
     Models trading strategy and backtests it.
 
     Attributes:
-        
+
         initial_money: Initial amount of money to work with.
-        
+
         money: Current amount of money.
-        
+
         stocks: Current amount of stocks.
 
         model: Instance of model used for forecasting.
@@ -52,7 +55,7 @@ class BackTesting:
         cs = Scaler().fit(current_state)
         for i in range(steps_forward):
             current_state += self.__model.predict(cs.scale(np.array(current_state[-depth:]).reshape((1,depth,1))), cs).reshape(-1).tolist()
-        return current_state[-1]  
+        return current_state[-1]
 
     def test(self, states, depth = 15, steps_forward = 5):
         '''
@@ -68,7 +71,7 @@ class BackTesting:
         >>> str.test(states, 15, 1)
         Successfully tested: 12532
         +2532 or 25.32% in 50 days.
-        2 trades, avg profit 1266 $ per trade. 
+        2 trades, avg profit 1266 $ per trade.
         '''
         self.__money = self.__initial_money
         trades_no = 0

@@ -1,3 +1,5 @@
+'''This submodule contains scaler class.'''
+
 import numpy as np
 
 class Scaler:
@@ -11,10 +13,10 @@ class Scaler:
         maximum: Maximum value seen during fit.
 
     '''
-    
+
     __minimum = 0
     __maximum = 0
-    
+
     def __init__(self, params = None):
         '''
         Initializes instance of scaler.
@@ -26,7 +28,7 @@ class Scaler:
         Example:
         >>> Scaler([0.2, 2.3])
         '''
-        if params != None:
+        if params is not None:
             self.__minimum, self.__maximum = params[0], params[1]
 
     def fit(self, array):
@@ -47,7 +49,7 @@ class Scaler:
         self.__minimum = np.min(array)
         self.__maximum = np.max(array)
         return self
-    
+
     def scale(self, array) -> np.array:
         '''
         Scales array using min and max found on fit.
@@ -65,7 +67,7 @@ class Scaler:
         [[0.6666, 1], [0.11, 0.066], ..]
         '''
         return (array-self.__minimum)/(self.__maximum - self.__minimum)
-        
+
     def unscale(self, array) -> np.array:
         '''
         Scales back array using min and max found on fit.
@@ -83,7 +85,7 @@ class Scaler:
         [[2, 3], [0.3,0.2], ..]
         '''
         return array*(self.__maximum - self.__minimum) + self.__minimum
-    
+
     def params(self) -> list:
         '''
         Shows min and max values, used to scale.

@@ -11,3 +11,4 @@ The usage of package is simple:
 > model = Model('LSTM x2', lag = 15)  
 > model.fit(x_train, y_train)
 > model.evaluate(x_test, y_test, scaler)  
+{'mse' : 0.679, 'mae' : 0.8291, 'mape' : 0.00783, 'r2' : 0.98778}

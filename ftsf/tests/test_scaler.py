@@ -1,27 +1,18 @@
 import sys
+
 sys.path.insert(0, '../ftsf')
 
-import ftsf, pytest
-
-def test_scaling_on_1d_array():
-    assert ([[0,0.5,1,1.5]] == ftsf.CustomScaler().fit([[0,1,2,3]]).scale([[0,1,2,3]])).all()
-def test_check_work1():
-    assert 1 == 1
-def test_check_work2():
-    assert 1 == 1
-def test_check_work3():
-    assert 1 == 1
+from ftsf.scaler import Scaler
 
 
-# eval 
-# ключи и их порядок
-# количество моделей в ответе
-# ошибки больше нуля, р2 меньше единицы
-# итого 9
+def test_scaling():
+    assert ([[0,0.5,1,1.5]] == Scaler().fit([[0,1,2]]).scale([[0,1,2,3]])).all()
 
-# scaler
-# нормализация
-# параметры
+def test_shape():
+    assert Scaler().fit([[0,1,2]]).scale([[0,1,2,3]]).shape == (1,4)
 
-# basktest
-# покупка продажа
+def test_setting_params():
+    assert Scaler([0,1]).params() == (0,1)
+
+def test_auto_setting_params():
+    assert Scaler().fit([[0,1,2,3]]).params() == (0,3)

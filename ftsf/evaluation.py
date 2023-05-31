@@ -4,7 +4,6 @@ import time
 import warnings
 
 import pandas as pd
-import plotly.express as px
 from sklearn.metrics import (mean_absolute_error,
                              mean_absolute_percentage_error,
                              mean_squared_error, r2_score)
@@ -13,6 +12,7 @@ warnings.filterwarnings("ignore")
 
 from .model import Model
 from .utils import get_models
+
 
 def evaluate_ml_models(x_train, x_test, y_train, y_test, scaler, out_type = 'list'):
     '''
@@ -40,7 +40,7 @@ def evaluate_ml_models(x_train, x_test, y_train, y_test, scaler, out_type = 'lis
 
     Example:
     >>> evaluate_ml_models(x_train, x_test, y_train, y_test, scaler)
-    [{'time' : 0.12, 'mse' : 0.04, 'mae' : 0.2, 'mape' : 0.01, 'model' : 'LR'}, ..]
+    [{'time' : 0.12, 'mse' : 0.04, 'mae' : 0.2, 'mape' : 0.01, 'model' : 'LR'}, ...]
     '''
     statistics = []
     for i in get_models('ml'):
@@ -88,7 +88,7 @@ def evaluate_ar_models(x_train, x_test, y_train, y_test, scaler, out_type = 'lis
 
     Example:
     >>> evaluate_ar_models(x_train, x_test, y_train, y_test, scaler)
-    [{'time' : 0.12, 'mse' : 0.04, 'mae' : 0.2, 'mape' : 0.01, 'model' : 'ARMA(2,1)'}, ..]
+    [{'time' : 0.12, 'mse' : 0.04, 'mae' : 0.2, 'mape' : 0.01, 'model' : 'ARMA(2,1)'}, ...]
     '''
     statistics = []
     for i in get_models('ar'):
@@ -145,7 +145,7 @@ def evaluate_nn_models(x_train, x_test, y_train, y_test, scaler, optimizer = 'na
 
     Example:
     >>> evaluate_nn_models(x_train, x_test, y_train, y_test, scaler)
-    [{'time' : 0.12, 'mse' : 0.04, 'mae' : 0.2, 'mape' : 0.01, 'model' : 'LSTM x1'}, ..]
+    [{'time' : 0.12, 'mse' : 0.04, 'mae' : 0.2, 'mape' : 0.01, 'model' : 'LSTM x1'}, ...]
     '''
 
     statistics = []
@@ -203,7 +203,7 @@ def evaluate_all_models(x_train, x_test, y_train, y_test, scaler, optimizer = 'n
 
     Example:
     >>> evaluate_all_models(x_train, x_test, y_train, y_test, scaler)
-    [{'time' : 0.12, 'mse' : 0.04, 'mae' : 0.2, 'mape' : 0.01, 'model' : 'LR'}, ..]
+    [{'time' : 0.12, 'mse' : 0.04, 'mae' : 0.2, 'mape' : 0.01, 'model' : 'LR'}, ...]
     '''
 
     statistics = evaluate_ml_models(x_train, x_test, y_train, y_test, scaler)

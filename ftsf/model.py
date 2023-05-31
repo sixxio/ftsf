@@ -1,23 +1,22 @@
 '''This submodule contains generic model class.'''
 
-# ML methods
 import numpy as np
 from catboost import CatBoostRegressor
+from joblib import dump, load
 from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import LinearRegression
-# Metrics
 from sklearn.metrics import (mean_absolute_error,
                              mean_absolute_percentage_error,
                              mean_squared_error, r2_score)
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
-# Autoregressive methods
 from statsmodels.tsa.arima.model import ARIMA
-# NN methods
 from tensorflow.keras import Sequential
+from tensorflow.keras.models import load_model, save_model
 from xgboost import XGBRegressor, XGBRFRegressor
 
-from .utils import (get_topologies, parse_name)
+from .utils import get_topologies, parse_name
+
 
 class Model:
     '''
@@ -196,6 +195,7 @@ class Model:
         Shows short summary about model, its type and backend.
 
         Returns:
+
             String with short model description.
 
         Example:
@@ -204,3 +204,42 @@ class Model:
         '''
 
         print(f'{self.__type.upper()} model {self.__name}, backend is based on {self.__backend}.')
+
+    def save(self, filename):
+        '''
+        Saves the trained model to a file.
+
+        Args:
+
+            filename: Path to save model file.
+
+        Example:
+        >>> model.save('saved_model.h5')
+        Model has been saved to saved_model.h5
+        '''
+        if self.__type == 'ml':
+            dump(self.__model, f'{filename}.joblib')
+            print(f'Model has been saved to {filename}.joblib.')
+        elif self.__type == 'nn':
+            save_model(self.__model, f'{filename}.h5')
+            print(f'Model has been saved to {filename}.h5.')
+        elif self.__type == 'ar':
+            print('Saving and loading AutoRegressive models is still developing.')
+
+    def load(self, filename):
+        '''
+        Loads a trained model from a file.
+
+        Args:
+            filename: Path to saved model file.
+
+        Example:
+        >>> model.load('saved_model.h5')
+        '''
+        if self.__type == 'ml':
+            self.__model = load(f'{filename}')
+        elif self.__type == 'nn':
+            self.__model = load_model(f'{filename}')
+        elif self.__type == 'ar':
+            print('Saving and loading AutoRegressive models is still developing.')
+        return self

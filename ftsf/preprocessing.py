@@ -3,15 +3,16 @@
 import datetime
 import json
 import re
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import requests as rq
 
 from .scaler import Scaler
-from pathlib import Path
 
 PACKAGEDIR = Path(__file__).parent.absolute()
+
 
 def get_data(ticker = 'AAPL', column = 'close', length = 15, step = 1, start_date = '01-01-2013', split_date = '01-01-2022', end_date = '01-01-2023', flatten = False, validate = False):
     '''

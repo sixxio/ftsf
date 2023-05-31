@@ -5,6 +5,7 @@ import numpy as np
 from .model import Model
 from .scaler import Scaler
 
+
 class BackTesting:
     '''
     Models trading strategy and backtests it.
@@ -52,19 +53,22 @@ class BackTesting:
         Internal method to forecast for a few steps forward.
         '''
         current_state = current_state.copy()
-        cs = Scaler().fit(current_state)
+        scaler = Scaler().fit(current_state)
         for i in range(steps_forward):
-            current_state += self.__model.predict(cs.scale(np.array(current_state[-depth:]).reshape((1,depth,1))), cs).reshape(-1).tolist()
+            current_state += self.__model.predict(scaler.scale(np.array(current_state[-depth:]).reshape((1,depth,1))), scaler).reshape(-1).tolist()
         return current_state[-1]
 
     def test(self, states, depth = 15, steps_forward = 5):
         '''
-        Implement strategy based on model forecasts, then backtests it.
+        Implements strategy based on model forecasts, then backtests it.
 
         Args:
-            states (list): Array of historic values.
-            depth (int): Number of values to forecast on.
-            steps_forward (int): Number of steps to forecast.
+
+            states: Array of historic values.
+
+            depth: Number of values to forecast on.
+
+            steps_forward: Number of steps to forecast.
 
         Example:
         >>> str = Backtesting(model, 10e4)

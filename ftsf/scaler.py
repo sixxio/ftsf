@@ -2,6 +2,7 @@
 
 import numpy as np
 
+
 class Scaler:
     '''
     Instance of default minmax scaler adapted for price scaling.

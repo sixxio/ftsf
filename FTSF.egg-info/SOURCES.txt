@@ -18,4 +18,6 @@ ftsf.egg-info/SOURCES.txt
 ftsf.egg-info/dependency_links.txt
 ftsf.egg-info/requires.txt
 ftsf.egg-info/top_level.txt
+ftsf/tests/test_evaluation.py
+ftsf/tests/test_preprocessing.py
 ftsf/tests/test_scaler.py

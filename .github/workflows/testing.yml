@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest numpy pandas tensorflow statsmodels scikit-learn catboost xgboost
+        pip install pytest numpy pandas tensorflow statsmodels scikit-learn catboost xgboost pyarrow
     - name: Test with pytest
       run: |
         pytest ftsf -p no:warnings

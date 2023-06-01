@@ -1,4 +1,4 @@
-name: website
+name: Fetching and publishing docs
 
 on:
   push:

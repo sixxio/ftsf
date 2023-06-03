@@ -24,13 +24,3 @@ dependencies = [
   "xgboost",
   "tensorflow",
 ]
-
-[project.urls]
-"Homepage" = "https://github.com/sixxio/ftsf"
-"Documentation" = "https://sixxio.github.io/ftsf/"
-"Bug Tracker" = "https://github.com/sixxio/ftsf/issues"
-
-[tool.setuptools]
-include-package-data = true
-[tool.setuptools.package-data]
-mypkg = "*.*"

@@ -1,8 +1,10 @@
 # ftsf
 This package provides high-level interface to work with financial time series forecasting models.
+
 ### Installation
 To install this package run command:
 > pip install ftsf
+
 ### Usage
 The usage of package is simple:
 > from ftsf.model import Model  
